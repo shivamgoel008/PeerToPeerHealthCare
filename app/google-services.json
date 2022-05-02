@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "180150396946",
+    "project_id": "peertopeerheathcare",
+    "storage_bucket": "peertopeerheathcare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180150396946:android:a9a9d8d890f56a159b90cb",
+        "android_client_info": {
+          "package_name": "com.example.peertopeerheathcare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180150396946-k0ku4vqaji4495bmnrjae400v3h7jok5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqbcQbk3kH0QfCcEh412ZGTrbOE1eqjHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180150396946-k0ku4vqaji4495bmnrjae400v3h7jok5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
