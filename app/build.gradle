@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.peertopeerheathcare"
-        minSdk 16
+        minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -71,6 +71,8 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
+    implementation 'org.webrtc:google-webrtc:1.0.+'
+    implementation fileTree(dir: "libs", include: ["*.aar"])
 
 }
 repositories {
