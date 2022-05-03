@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         join_meeting.setOnClickListener {
-            if (meeting_id.text.toString().trim().isNullOrEmpty())
+            if (meeting_id.text.toString().trim().isEmpty())
                 meeting_id.error = "Please enter meeting id"
             else {
                 val intent = Intent(this@MainActivity, InternalUIActivity::class.java)
