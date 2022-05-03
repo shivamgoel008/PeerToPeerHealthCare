@@ -18,7 +18,7 @@ import java.util.*
 import kotlin.collections.HashSet
 
 
-class RTCAudioManager(context: Context) {
+class AudioManager(context: Context) {
     /**
      * AudioDevice is the names of possible audio devices that we currently
      * support.
@@ -420,8 +420,8 @@ class RTCAudioManager(context: Context) {
         private val SPEAKERPHONE_FALSE = "false"
 
         /** Construction.  */
-        fun create(context: Context): RTCAudioManager {
-            return RTCAudioManager(context)
+        fun create(context: Context): com.example.peertopeerheathcare.AudioManager {
+            return AudioManager(context)
         }
     }
 

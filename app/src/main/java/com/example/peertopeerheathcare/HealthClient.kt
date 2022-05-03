@@ -8,7 +8,7 @@ import com.google.firebase.ktx.Firebase
 import org.webrtc.*
 
 
-class RTCClient(
+class HealthClient(
     context: Application,
     observer: PeerConnection.Observer
 ) {
@@ -22,7 +22,7 @@ class RTCClient(
 
     private var localAudioTrack : AudioTrack? = null
     private var localVideoTrack : VideoTrack? = null
-    val TAG = "RTCClient"
+    val TAG = "HealthClient"
 
     var remoteSessionDescription : SessionDescription? = null
 
