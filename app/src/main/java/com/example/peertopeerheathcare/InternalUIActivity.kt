@@ -4,19 +4,15 @@ package com.example.peertopeerheathcare
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.webrtc.*
-import java.util.*
 
 @ExperimentalCoroutinesApi
 class InternalUIActivity : AppCompatActivity() {
@@ -28,7 +24,7 @@ class InternalUIActivity : AppCompatActivity() {
     }
 
     val TAG = "MainActivity"
-    private var meetingID : String = "test-call"
+    private var meetingID: String = "test-call"
     private var isJoin = false
     private var isMute = false
     private var isVideoPaused = false
@@ -41,7 +37,7 @@ class InternalUIActivity : AppCompatActivity() {
         if (intent.hasExtra("meetingID"))
             meetingID = intent.getStringExtra("meetingID")!!
         if (intent.hasExtra("isJoin"))
-            isJoin = intent.getBooleanExtra("isJoin",false)
+            isJoin = intent.getBooleanExtra("isJoin", false)
 
         checkCameraAndAudioPermission()
 
@@ -84,8 +80,9 @@ class InternalUIActivity : AppCompatActivity() {
     private fun checkCameraAndAudioPermission() {
         if ((ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION)
                     != PackageManager.PERMISSION_GRANTED) &&
-            (ContextCompat.checkSelfPermission(this,AUDIO_PERMISSION)
-                    != PackageManager.PERMISSION_GRANTED)) {
+            (ContextCompat.checkSelfPermission(this, AUDIO_PERMISSION)
+                    != PackageManager.PERMISSION_GRANTED)
+        ) {
             requestCameraAndAudioPermission()
         } else {
             onCameraAndAudioPermissionGranted()
@@ -98,10 +95,15 @@ class InternalUIActivity : AppCompatActivity() {
     private fun requestCameraAndAudioPermission(dialogShown: Boolean = false) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA_PERMISSION) &&
             ActivityCompat.shouldShowRequestPermissionRationale(this, AUDIO_PERMISSION) &&
-            !dialogShown) {
+            !dialogShown
+        ) {
             showPermissionRationaleDialog()
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(CAMERA_PERMISSION, AUDIO_PERMISSION), CAMERA_AUDIO_PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(CAMERA_PERMISSION, AUDIO_PERMISSION),
+                CAMERA_AUDIO_PERMISSION_REQUEST_CODE
+            )
         }
     }
 
@@ -120,7 +122,11 @@ class InternalUIActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_AUDIO_PERMISSION_REQUEST_CODE && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             onCameraAndAudioPermissionGranted()

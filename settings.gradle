@@ -6,6 +6,7 @@ pluginManagement {
         google()
         jcenter()
         mavenCentral()
+        jcenter()
     }
 }
 dependencyResolutionManagement {
@@ -15,6 +16,7 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
+        jcenter()
     }
 }
 rootProject.name = "PeerToPeerHeathCare"
