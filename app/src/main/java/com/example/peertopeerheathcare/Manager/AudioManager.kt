@@ -1,4 +1,4 @@
-package com.example.peertopeerheathcare
+package com.example.peertopeerheathcare.Manager
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -13,21 +13,18 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.Nullable
+import com.example.peertopeerheathcare.R
 import org.webrtc.ThreadUtils
 import java.util.*
 import kotlin.collections.HashSet
 
 
 class AudioManager(context: Context) {
-    /**
-     * AudioDevice is the names of possible audio devices that we currently
-     * support.
-     */
+
     enum class AudioDevice {
         SPEAKER_PHONE, WIRED_HEADSET, EARPIECE, NONE
     }
 
-    /** AudioManager state.  */
     enum class AudioManagerState {
         UNINITIALIZED, PREINITIALIZED, RUNNING
     }
@@ -41,11 +38,7 @@ class AudioManager(context: Context) {
     }
 
     private val apprtcContext: Context
-
-    @Nullable
     private val audioManager: AudioManager
-
-    @Nullable
     private var audioManagerEvents: AudioManagerEvents? = null
     private var amState: AudioManagerState
     private var savedAudioMode = AudioManager.MODE_INVALID
@@ -57,11 +50,6 @@ class AudioManager(context: Context) {
     // only calls.
     private var defaultAudioDevice: AudioDevice? = null
 
-    // Contains the currently selected audio device.
-    // This device is changed automatically using a certain scheme where e.g.
-    // a wired headset "wins" over speaker phone. It is also possible for a
-    // user to explicitly select a device (and overrid any predefined scheme).
-    // See |userSelectedAudioDevice| for details.
     private var selectedAudioDevice: AudioDevice? = null
 
     // Contains the user-selected audio device which overrides the predefined
@@ -91,7 +79,8 @@ class AudioManager(context: Context) {
             val state = intent.getIntExtra("state", STATE_UNPLUGGED)
             val microphone = intent.getIntExtra("microphone", HAS_NO_MIC)
             val name = intent.getStringExtra("name")
-            Log.d(TAG, "WiredHeadsetReceiver.onReceive"
+            Log.d(
+                TAG, "WiredHeadsetReceiver.onReceive"
                     + ": " + "a=" + intent.action.toString() + ", s=" +
                     (if (state == STATE_UNPLUGGED) "unplugged" else "plugged").toString()
                     + ", m=" + (if (microphone == HAS_MIC) "mic" else "no mic").toString()
@@ -308,14 +297,6 @@ class AudioManager(context: Context) {
         return apprtcContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
     }
 
-    /**
-     * Checks whether a wired headset is connected or not.
-     * This is not a valid indication that audio playback is actually over
-     * the wired headset as audio routing depends on other conditions. We
-     * only use it as an early indicator (during initialization) of an attached
-     * wired headset.
-     */
-    @Deprecated("")
     private fun hasWiredHeadset(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return audioManager.isWiredHeadsetOn
@@ -420,7 +401,7 @@ class AudioManager(context: Context) {
         private val SPEAKERPHONE_FALSE = "false"
 
         /** Construction.  */
-        fun create(context: Context): com.example.peertopeerheathcare.AudioManager {
+        fun create(context: Context): com.example.peertopeerheathcare.Manager.AudioManager {
             return AudioManager(context)
         }
     }

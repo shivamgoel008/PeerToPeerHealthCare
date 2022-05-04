@@ -9,7 +9,7 @@
 
 
     <org.webrtc.SurfaceViewRenderer
-        android:id="@+id/remote_view"
+        android:id="@+id/doctor_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <org.webrtc.SurfaceViewRenderer
-        android:id="@+id/local_view"
+        android:id="@+id/patient_view"
         android:layout_width="120dp"
         android:layout_height="150dp"
         android:layout_above="@+id/controls"
@@ -27,15 +27,15 @@
         app:layout_constraintBottom_toTopOf="@+id/controls"
         app:layout_constraintStart_toStartOf="parent" />
     <ProgressBar
-        android:layout_centerInParent="true"
         android:id="@+id/remote_view_loading"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="@id/remote_view"
-        app:layout_constraintEnd_toEndOf="@id/remote_view"
-        app:layout_constraintStart_toStartOf="@id/remote_view"
-        app:layout_constraintTop_toTopOf="@id/remote_view" />
+        app:layout_constraintBottom_toBottomOf="@id/doctor_view"
+        app:layout_constraintEnd_toEndOf="@id/doctor_view"
+        app:layout_constraintStart_toStartOf="@id/doctor_view"
+        app:layout_constraintTop_toTopOf="@id/doctor_view" />
 
     <ScrollView
         android:id="@+id/controls"
@@ -45,7 +45,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/remote_view"
+        app:layout_constraintBottom_toBottomOf="@+id/doctor_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 

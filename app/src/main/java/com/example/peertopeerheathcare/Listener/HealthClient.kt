@@ -1,4 +1,4 @@
-package com.example.peertopeerheathcare
+package com.example.peertopeerheathcare.Listener
 
 import android.app.Application
 import android.content.Context
@@ -8,10 +8,7 @@ import com.google.firebase.ktx.Firebase
 import org.webrtc.*
 
 
-class HealthClient(
-    context: Application,
-    observer: PeerConnection.Observer
-) {
+class HealthClient(context: Application, observer: PeerConnection.Observer) {
 
     companion object {
         private const val LOCAL_TRACK_ID = "local_track"
@@ -20,11 +17,11 @@ class HealthClient(
 
     private val rootEglBase: EglBase = EglBase.create()
 
-    private var localAudioTrack : AudioTrack? = null
-    private var localVideoTrack : VideoTrack? = null
+    private var localAudioTrack: AudioTrack? = null
+    private var localVideoTrack: VideoTrack? = null
     val TAG = "HealthClient"
 
-    var remoteSessionDescription : SessionDescription? = null
+    var remoteSessionDescription: SessionDescription? = null
 
     val db = Firebase.firestore
 
@@ -32,8 +29,10 @@ class HealthClient(
         initPeerConnectionFactory(context)
     }
 
-    private val list: MutableList<String> = mutableListOf("stun:stun.l.google.com:19302",
-        "turn:numb.viagenie.ca[webrtc@live.com:muazkh]")
+    private val list: MutableList<String> = mutableListOf(
+        "stun:stun.l.google.com:19302",
+        "turn:numb.viagenie.ca[webrtc@live.com:muazkh]"
+    )
 
     private val iceServer = listOf(
         PeerConnection.IceServer.builder("turn:numb.viagenie.ca")
@@ -45,7 +44,7 @@ class HealthClient(
     private val peerConnectionFactory by lazy { buildPeerConnectionFactory() }
     private val videoCapturer by lazy { getVideoCapturer(context) }
 
-    private val audioSource by lazy { peerConnectionFactory.createAudioSource(MediaConstraints())}
+    private val audioSource by lazy { peerConnectionFactory.createAudioSource(MediaConstraints()) }
     private val localVideoSource by lazy { peerConnectionFactory.createVideoSource(false) }
     private val peerConnection by lazy { buildPeerConnection(observer) }
 
@@ -61,7 +60,13 @@ class HealthClient(
         return PeerConnectionFactory
             .builder()
             .setVideoDecoderFactory(DefaultVideoDecoderFactory(rootEglBase.eglBaseContext))
-            .setVideoEncoderFactory(DefaultVideoEncoderFactory(rootEglBase.eglBaseContext, true, true))
+            .setVideoEncoderFactory(
+                DefaultVideoEncoderFactory(
+                    rootEglBase.eglBaseContext,
+                    true,
+                    true
+                )
+            )
             .setOptions(PeerConnectionFactory.Options().apply {
                 disableEncryption = true
                 disableNetworkMonitor = true
@@ -69,10 +74,11 @@ class HealthClient(
             .createPeerConnectionFactory()
     }
 
-    private fun buildPeerConnection(observer: PeerConnection.Observer) = peerConnectionFactory.createPeerConnection(
-        iceServer,
-        observer
-    )
+    private fun buildPeerConnection(observer: PeerConnection.Observer) =
+        peerConnectionFactory.createPeerConnection(
+            iceServer,
+            observer
+        )
 
     private fun getVideoCapturer(context: Context) =
         Camera2Enumerator(context).run {
@@ -90,10 +96,16 @@ class HealthClient(
     }
 
     fun startLocalVideoCapture(localVideoOutput: SurfaceViewRenderer) {
-        val surfaceTextureHelper = SurfaceTextureHelper.create(Thread.currentThread().name, rootEglBase.eglBaseContext)
-        (videoCapturer as VideoCapturer).initialize(surfaceTextureHelper, localVideoOutput.context, localVideoSource.capturerObserver)
+        val surfaceTextureHelper =
+            SurfaceTextureHelper.create(Thread.currentThread().name, rootEglBase.eglBaseContext)
+        (videoCapturer as VideoCapturer).initialize(
+            surfaceTextureHelper,
+            localVideoOutput.context,
+            localVideoSource.capturerObserver
+        )
         videoCapturer.startCapture(320, 240, 60)
-        localAudioTrack = peerConnectionFactory.createAudioTrack(LOCAL_TRACK_ID + "_audio", audioSource);
+        localAudioTrack =
+            peerConnectionFactory.createAudioTrack(LOCAL_TRACK_ID + "_audio", audioSource);
         localVideoTrack = peerConnectionFactory.createVideoTrack(LOCAL_TRACK_ID, localVideoSource)
         localVideoTrack?.addSink(localVideoOutput)
         val localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID)
@@ -195,9 +207,11 @@ class HealthClient(
         }, constraints)
     }
 
-    fun call(sdpObserver: SdpObserver, meetingID: String) = peerConnection?.call(sdpObserver, meetingID)
+    fun call(sdpObserver: SdpObserver, meetingID: String) =
+        peerConnection?.call(sdpObserver, meetingID)
 
-    fun answer(sdpObserver: SdpObserver, meetingID: String) = peerConnection?.answer(sdpObserver, meetingID)
+    fun answer(sdpObserver: SdpObserver, meetingID: String) =
+        peerConnection?.answer(sdpObserver, meetingID)
 
     fun onRemoteSessionReceived(sessionDescription: SessionDescription) {
         remoteSessionDescription = sessionDescription
@@ -229,13 +243,25 @@ class HealthClient(
         db.collection("calls").document(meetingID).collection("candidates")
             .get().addOnSuccessListener {
                 val iceCandidateArray: MutableList<IceCandidate> = mutableListOf()
-                for ( dataSnapshot in it) {
-                    if (dataSnapshot.contains("type") && dataSnapshot["type"]=="offerCandidate") {
+                for (dataSnapshot in it) {
+                    if (dataSnapshot.contains("type") && dataSnapshot["type"] == "offerCandidate") {
                         val offerCandidate = dataSnapshot
-                        iceCandidateArray.add(IceCandidate(offerCandidate["sdpMid"].toString(), Math.toIntExact(offerCandidate["sdpMLineIndex"] as Long), offerCandidate["sdp"].toString()))
-                    } else if (dataSnapshot.contains("type") && dataSnapshot["type"]=="answerCandidate") {
+                        iceCandidateArray.add(
+                            IceCandidate(
+                                offerCandidate["sdpMid"].toString(),
+                                Math.toIntExact(offerCandidate["sdpMLineIndex"] as Long),
+                                offerCandidate["sdp"].toString()
+                            )
+                        )
+                    } else if (dataSnapshot.contains("type") && dataSnapshot["type"] == "answerCandidate") {
                         val answerCandidate = dataSnapshot
-                        iceCandidateArray.add(IceCandidate(answerCandidate["sdpMid"].toString(), Math.toIntExact(answerCandidate["sdpMLineIndex"] as Long), answerCandidate["sdp"].toString()))
+                        iceCandidateArray.add(
+                            IceCandidate(
+                                answerCandidate["sdpMid"].toString(),
+                                Math.toIntExact(answerCandidate["sdpMLineIndex"] as Long),
+                                answerCandidate["sdp"].toString()
+                            )
+                        )
                     }
                 }
                 peerConnection?.removeIceCandidates(iceCandidateArray.toTypedArray())
@@ -256,7 +282,7 @@ class HealthClient(
     }
 
     fun enableVideo(videoEnabled: Boolean) {
-        if (localVideoTrack !=null)
+        if (localVideoTrack != null)
             localVideoTrack?.setEnabled(videoEnabled)
     }
 
@@ -264,6 +290,7 @@ class HealthClient(
         if (localAudioTrack != null)
             localAudioTrack?.setEnabled(audioEnabled)
     }
+
     fun switchCamera() {
         videoCapturer.switchCamera(null)
     }

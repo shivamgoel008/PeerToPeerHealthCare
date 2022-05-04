@@ -1,52 +1,23 @@
-package com.example.peertopeerheathcare
+package com.example.peertopeerheathcare.Listener
 
 import android.util.Log
+import com.example.peertopeerheathcare.Constants.Constants
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-
-import com.google.gson.Gson
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.websocket.*
 import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import org.json.JSONObject
 import org.webrtc.IceCandidate
 import org.webrtc.SessionDescription
 
 @ExperimentalCoroutinesApi
 @KtorExperimentalAPI
-class SignalingClient(
-    private val meetingID : String,
-    private val listener: SignalingClientListener
-) : CoroutineScope {
-
-    companion object {
-//        private const val HOST_ADDRESS = "192.168.0.12"
-        private const val HOST_ADDRESS = "34.228.40.86"
-    }
-
-    var jsonObject : JSONObject?= null
-
+class SignalingClient(private val meetingID : String, private val listener: SignalingClientListener): CoroutineScope {
     private val job = Job()
-
     val TAG = "SignallingClient"
-
     val db = Firebase.firestore
-
-    private val gson = Gson()
-
     var SDPtype : String? = null
     override val coroutineContext = Dispatchers.IO + job
-
-    private val client = HttpClient(CIO) {
-        install(WebSockets)
-        install(JsonFeature) {
-            serializer = GsonSerializer()
-        }
-    }
 
     private val sendChannel = ConflatedBroadcastChannel<String>()
 
@@ -55,26 +26,12 @@ class SignalingClient(
     }
 
     private fun connect() = launch {
-
-//        client.ws(host = HOST_ADDRESS, port = 8080, path = "/connect"){
-
             db.enableNetwork().addOnSuccessListener {
                 listener.onConnectionEstablished()
             }
             val sendData = sendChannel.offer("")
             sendData.let {
                 Log.v(this@SignalingClient.javaClass.simpleName, "Sending: $it")
-//            val data = hashMapOf(
-//                    "data" to it
-//            )
-//            db.collection("calls")
-//                    .add(data)
-//                    .addOnSuccessListener { documentReference ->
-//                        Log.e(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-//                    }
-//                    .addOnFailureListener { e ->
-//                        Log.e(TAG, "Error adding document", e)
-//                    }
             }
             try {
                 db.collection("calls")
@@ -135,31 +92,11 @@ class SignalingClient(
                             }
                         }
                     }
-//            db.collection("calls").document(meetingID)
-//                    .get()
-//                    .addOnSuccessListener { result ->
-//                        val data = result.data
-//                        if (data?.containsKey("type")!! && data.getValue("type").toString() == "OFFER") {
-//                            Log.e(TAG, "connect: OFFER - $data")
-//                            listener.onOfferReceived(SessionDescription(SessionDescription.Type.OFFER,data["sdp"].toString()))
-//                        } else if (data?.containsKey("type") && data.getValue("type").toString() == "ANSWER") {
-//                            Log.e(TAG, "connect: ANSWER - $data")
-//                            listener.onAnswerReceived(SessionDescription(SessionDescription.Type.ANSWER,data["sdp"].toString()))
-//                        }
-//                    }
-//                    .addOnFailureListener {
-//                        Log.e(TAG, "connect: $it")
-//                    }
-
             }
             catch (exception: Exception) {
                 Log.e(TAG, "connectException: $exception")
 
             }
-
-//        }
-
-
     }
 
     fun sendIceCandidate(candidate: IceCandidate?,isJoin : Boolean) = runBlocking {
@@ -186,7 +123,6 @@ class SignalingClient(
     }
 
     fun destroy() {
-//        client.close()
         job.complete()
     }
 }

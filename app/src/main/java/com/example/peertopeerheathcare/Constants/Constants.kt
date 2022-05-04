@@ -1,4 +1,4 @@
-package com.example.peertopeerheathcare
+package com.example.peertopeerheathcare.Constants
 
 class Constants {
     companion object {

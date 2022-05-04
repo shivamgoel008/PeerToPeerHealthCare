@@ -1,4 +1,4 @@
-package com.example.peertopeerheathcare
+package com.example.peertopeerheathcare.Activity
 
 import android.Manifest
 import android.content.Intent
@@ -11,6 +11,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import com.example.peertopeerheathcare.Constants.Constants
+import com.example.peertopeerheathcare.Listener.HealthClient
+import com.example.peertopeerheathcare.Listener.SignalingClient
+import com.example.peertopeerheathcare.Listener.SignalingClientListener
+import com.example.peertopeerheathcare.Manager.AudioManager
+import com.example.peertopeerheathcare.Observers.AppSdpObserver
+import com.example.peertopeerheathcare.Observers.PeerConnectionObserver
+import com.example.peertopeerheathcare.R.*
 import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.*
@@ -42,15 +50,11 @@ class InternalUIActivity : AppCompatActivity() {
     private var inSpeakerMode = true
 
     private val sdpObserver = object : AppSdpObserver() {
-        override fun onCreateSuccess(p0: SessionDescription?) {
-            super.onCreateSuccess(p0)
-//            signallingClient.send(p0)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start)
+        setContentView(layout.activity_start)
 
         if (intent.hasExtra("meetingID"))
             meetingID = intent.getStringExtra("meetingID")!!
@@ -66,37 +70,37 @@ class InternalUIActivity : AppCompatActivity() {
         audio_output_button.setOnClickListener {
             if (inSpeakerMode) {
                 inSpeakerMode = false
-                audio_output_button.setImageResource(R.drawable.ic_baseline_hearing_24)
+                audio_output_button.setImageResource(drawable.ic_baseline_hearing_24)
                 audioManager.setDefaultAudioDevice(AudioManager.AudioDevice.EARPIECE)
             } else {
                 inSpeakerMode = true
-                audio_output_button.setImageResource(R.drawable.ic_baseline_speaker_up_24)
+                audio_output_button.setImageResource(drawable.ic_baseline_speaker_up_24)
                 audioManager.setDefaultAudioDevice(AudioManager.AudioDevice.SPEAKER_PHONE)
             }
         }
         video_button.setOnClickListener {
             if (isVideoPaused) {
                 isVideoPaused = false
-                video_button.setImageResource(R.drawable.ic_baseline_videocam_off_24)
+                video_button.setImageResource(drawable.ic_baseline_videocam_off_24)
             } else {
                 isVideoPaused = true
-                video_button.setImageResource(R.drawable.ic_baseline_videocam_24)
+                video_button.setImageResource(drawable.ic_baseline_videocam_24)
             }
             rtcClient.enableVideo(isVideoPaused)
         }
         mic_button.setOnClickListener {
             if (isMute) {
                 isMute = false
-                mic_button.setImageResource(R.drawable.ic_baseline_mic_off_24)
+                mic_button.setImageResource(drawable.ic_baseline_mic_off_24)
             } else {
                 isMute = true
-                mic_button.setImageResource(R.drawable.ic_baseline_mic_24)
+                mic_button.setImageResource(drawable.ic_baseline_mic_24)
             }
             rtcClient.enableAudio(isMute)
         }
         end_call_button.setOnClickListener {
             rtcClient.endCall(meetingID)
-            remote_view.isGone = false
+            doctor_view.isGone = false
             Constants.isCallEnded = true
             finish()
             startActivity(Intent(this@InternalUIActivity, MainActivity::class.java))
@@ -106,7 +110,7 @@ class InternalUIActivity : AppCompatActivity() {
     private fun checkCameraAndAudioPermission() {
         if ((ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION)
                     != PackageManager.PERMISSION_GRANTED) &&
-            (ContextCompat.checkSelfPermission(this,AUDIO_PERMISSION)
+            (ContextCompat.checkSelfPermission(this, AUDIO_PERMISSION)
                     != PackageManager.PERMISSION_GRANTED)) {
             requestCameraAndAudioPermission()
         } else {
@@ -127,7 +131,7 @@ class InternalUIActivity : AppCompatActivity() {
                 override fun onAddStream(p0: MediaStream?) {
                     super.onAddStream(p0)
                     Log.e(TAG, "onAddStream: $p0")
-                    p0?.videoTracks?.get(0)?.addSink(remote_view)
+                    p0?.videoTracks?.get(0)?.addSink(doctor_view)
                 }
 
                 override fun onIceConnectionChange(p0: PeerConnection.IceConnectionState?) {
@@ -160,9 +164,9 @@ class InternalUIActivity : AppCompatActivity() {
             }
         )
 
-        rtcClient.initSurfaceView(remote_view)
-        rtcClient.initSurfaceView(local_view)
-        rtcClient.startLocalVideoCapture(local_view)
+        rtcClient.initSurfaceView(doctor_view)
+        rtcClient.initSurfaceView(patient_view)
+        rtcClient.startLocalVideoCapture(patient_view)
         signallingClient =  SignalingClient(meetingID,createSignallingClientListener())
         if (!isJoin)
             rtcClient.call(sdpObserver,meetingID)
