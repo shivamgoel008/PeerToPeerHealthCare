@@ -21,7 +21,7 @@
             android:name=".Activity.InternalUIActivity"
             android:exported="false" />
         <activity
-            android:name=".DoctorList"
+            android:name=".Activity.DoctorList"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

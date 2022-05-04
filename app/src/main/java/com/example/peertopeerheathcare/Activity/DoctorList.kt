@@ -1,9 +1,9 @@
-package com.example.peertopeerheathcare
+package com.example.peertopeerheathcare.Activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.peertopeerheathcare.Activity.MainActivity
+import com.example.peertopeerheathcare.R
 import kotlinx.android.synthetic.main.activity_doctor_list.*
 
 class DoctorList : AppCompatActivity() {
