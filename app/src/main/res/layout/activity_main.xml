@@ -20,6 +20,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="Care On Call"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/cardView"
+                app:layout_constraintEnd_toEndOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
                 android:layout_width="200dp"
@@ -40,13 +52,12 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="64dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:elevation="8dp"
                 app:cardCornerRadius="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/cardView"
@@ -101,12 +112,18 @@
                         app:layout_constraintBottom_toBottomOf="@+id/start_room"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/start_room" />
-
-
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/doc"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/cardView2"
+                app:layout_constraintStart_toStartOf="@+id/cardView2"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

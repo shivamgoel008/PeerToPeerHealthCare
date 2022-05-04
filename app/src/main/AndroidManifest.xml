@@ -15,13 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PeerToPeerHeathCare">
         <activity
-            android:name=".DoctorList"
+            android:name=".Activity.MainActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.InternalUIActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".DoctorList"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
